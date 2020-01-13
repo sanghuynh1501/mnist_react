@@ -1,14 +1,13 @@
 import React from 'react'
 import logo from './logo.svg'
 import './App.css'
+import { instantiate } from "assemblyscript/lib/loader";
 
 class App extends React.Component {
-  componentDidMount() {
-    require("webassembly")
-    .load("http://localhost:3000/predict.wasm")
-    .then(module => {
-      console.log("data " + module.exports.add(10))
-    });
+  async componentDidMount() {
+    this.engine = await instantiate(fetch("http://localhost:3000/predict.wasm"));
+    let data = this.engine.predict(10, 20)
+    console.log("data ", data)
   }
   render() {
     return (
